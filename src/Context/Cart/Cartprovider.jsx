@@ -3,11 +3,9 @@ import { CartContext } from "./CartContext";
 
 const Cartprovider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [quantity, setQuantity] = useState(1);
+
   return (
-    <CartContext.Provider
-      value={{ cartItems, setCartItems, setQuantity, quantity }}
-    >
+    <CartContext.Provider value={{ cartItems, setCartItems }}>
       {children}
     </CartContext.Provider>
   );

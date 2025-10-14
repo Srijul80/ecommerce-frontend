@@ -4,12 +4,10 @@ import { ProductContext } from "../Context/Product/ProductContext";
 import AddToCartBtn from "../components/ui/AddToCartBtn";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
-import { CartContext } from "../Context/Cart/CartContext";
 
 const ProductDetails = () => {
   const [singleProduct, setSingleProduct] = useState(null);
-  const { quantity, setQuantity } = useContext(CartContext);
-
+  const [quantity, setQuantity] = useState(1);
   const { allProducts } = useContext(ProductContext);
   const { id } = useParams();
 

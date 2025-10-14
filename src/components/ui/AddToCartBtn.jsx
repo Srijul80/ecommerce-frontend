@@ -3,7 +3,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { CartContext } from "../../Context/Cart/CartContext";
 
 const AddToCartBtn = ({ product, quantity }) => {
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { cartItems, setCartItems, setQuantity } = useContext(CartContext);
   const handleAddToCart = () => {
     const newItem = { product, quantity };
 
@@ -18,6 +18,8 @@ const AddToCartBtn = ({ product, quantity }) => {
     }
 
     setCartItems((prev) => [...prev, newItem]);
+    setQuantity(1);
+    alert("added to cart");
   };
 
   useEffect(() => {
