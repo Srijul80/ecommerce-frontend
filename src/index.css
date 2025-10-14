@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+body {
+  background-color: #f3f4f6;
+}
+
+@theme {
+  /* sm: "640px",   // mobile
+  md: "768px",   // tablets
+  lg: "1024px",  // laptops
+  xl: "1280px",  // desktops
+  "2xl": "1536px", // large screens */
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+@layer {
+  .active-link {
+    @apply underline underline-offset-2;
+  }
+}
