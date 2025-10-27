@@ -1,146 +1,141 @@
 import React, { useContext, useEffect, useState } from "react";
-
-import { CiCirclePlus } from "react-icons/ci";
-import { CiCircleMinus } from "react-icons/ci";
+import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { CartContext } from "../Context/Cart/CartContext";
 
 const Cart = () => {
   const { setCartItems } = useContext(CartContext);
   const [cartData, setCartData] = useState([]);
+
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("cart"))) {
-      setCartData(JSON.parse(localStorage.getItem("cart")));
-      console.log("cart data is", cartData);
-    } else {
-      setCartData([]);
+    const storedCart = JSON.parse(localStorage.getItem("cart"));
+    if (storedCart) {
+      setCartData(storedCart);
+      setCartItems(storedCart);
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartData));
+    setCartItems(cartData);
+  }, [cartData]);
+
+  const totalPrice = cartData.reduce((total, item) => {
+    return total + item.product.price * item.quantity;
+  }, 0);
+
   const clearCart = () => {
-    localStorage.removeItem("cart");
     setCartData([]);
-    alert("local storage data clear");
-  };
-  // Handle Quantity
-  const increaseQty = (id) => {
-    const updatedCart = cartData.map((item) => {
-      if (item.product.id === id) {
-        return { ...item, quantity: item.quantity + 1 };
-      }
-      return item;
-    });
-    setCartData(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCartItems([]);
+    localStorage.removeItem("cart");
   };
 
-  const decreaseQty = (id) => {
-    const updatedCart = cartData.map((item) => {
-      if (item.product.id === id && item.quantity > 1) {
-        return { ...item, quantity: item.quantity - 1 };
-      }
-      return item;
-    });
+  const updateQty = (id, amount) => {
+    const updatedCart = cartData.map((item) =>
+      item.product.id === id
+        ? { ...item, quantity: Math.max(1, item.quantity + amount) }
+        : item,
+    );
     setCartData(updatedCart);
-
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
-  const deleteCartItem = (id) => {
-    const updatedCart = cartData.filter((item) => {
-      return item.product.id !== id;
-    });
-    setCartData(updatedCart);
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // const totalPrice = cartItems.reduce((total, item) => {
-  //   return total + item.product.price * item.quantity;
-  // }, 0);
+  const deleteItem = (id) => {
+    const updated = cartData.filter((item) => item.product.id !== id);
+    setCartData(updated);
+  };
+
   return (
-    <>
-      <button
-        className="m-2 rounded border-2 bg-blue-500 p-2 text-white hover:bg-blue-600"
-        onClick={clearCart}
-      >
-        Clear cart
-      </button>
+    <div className="p-6">
+      <h1 className="mb-4 text-2xl font-bold text-gray-800">Shopping Cart</h1>
+
       {cartData.length === 0 ? (
-        "no items in cart"
+        <div className="mt-10 text-center text-lg font-medium text-gray-600">
+          Your cart is empty — start shopping!
+        </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 text-left text-sm">
-            <thead className="bg-gray-100 text-xs text-gray-700 uppercase">
-              <tr>
-                <th className="border-b px-6 py-3">Product</th>
-                <th className="border-b px-6 py-3">Price</th>
-                <th className="border-b px-6 py-3">Image</th>
-                <th className="border-b px-6 py-3">Quantity</th>
-                <th className="border-b px-6 py-3">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {cartData.map((item) => {
-                return (
-                  <tr
-                    className="transition hover:bg-gray-50"
-                    key={item.product.id}
-                  >
-                    <td className="px-6 py-4">{item.product.title}</td>
-                    <td className="px-6 py-4">
-                      {Math.round(item.product.price * item.quantity)}
+        <>
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full text-left text-sm">
+              <thead className="bg-gray-200 text-xs font-semibold tracking-wide text-gray-700 uppercase">
+                <tr>
+                  <th className="px-6 py-3">Product</th>
+                  <th className="px-6 py-3">Price</th>
+                  <th className="px-6 py-3">Image</th>
+                  <th className="px-6 py-3">Quantity</th>
+                  <th className="px-6 py-3 text-center">Action</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y">
+                {cartData.map((item) => (
+                  <tr key={item.product.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 font-medium text-gray-800">
+                      {item.product.title}
                     </td>
+
+                    <td className="px-6 py-4 font-semibold text-gray-700">
+                      ${item.product.price * item.quantity}
+                    </td>
+
                     <td className="px-6 py-4">
                       <img
-                        src={item.product.images ? item.product.images[0] : ""}
+                        src={item.product.images?.[0]}
                         alt={item.product.title}
-                        className="h-20 w-20 object-cover"
+                        className="h-20 w-20 rounded object-cover shadow-sm"
                       />
                     </td>
+
                     <td className="px-6 py-4">
-                      <div className="flex w-40 items-center justify-center rounded-lg border border-gray-300">
+                      <div className="flex w-36 items-center justify-center rounded border bg-white shadow-sm">
                         <button
-                          onClick={() => {
-                            decreaseQty(item.product.id);
-                          }}
-                          className="rounded-l-lg p-2 transition hover:bg-gray-100"
+                          onClick={() => updateQty(item.product.id, -1)}
+                          className="p-1 hover:bg-gray-100"
                         >
-                          <CiCircleMinus size={18} />
+                          <CiCircleMinus size={22} />
                         </button>
                         <input
-                          type="number"
-                          value={item.quantity}
                           readOnly
-                          className="w-16 border-x text-center font-semibold text-gray-800"
+                          value={item.quantity}
+                          className="w-12 border-x text-center text-lg font-semibold"
                         />
                         <button
-                          onClick={() => {
-                            increaseQty(item.product.id);
-                          }}
-                          className="rounded-r-lg p-2 transition hover:bg-gray-100"
+                          onClick={() => updateQty(item.product.id, 1)}
+                          className="p-1 hover:bg-gray-100"
                         >
-                          <CiCirclePlus size={18} />
+                          <CiCirclePlus size={22} />
                         </button>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+
+                    <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => deleteCartItem(item.product.id)}
-                        className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all duration-300 hover:bg-red-700 hover:shadow-lg active:scale-95"
+                        onClick={() => deleteItem(item.product.id)}
+                        className="rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-red-700"
                       >
-                        <span>Remove</span>
+                        Remove
                       </button>
                     </td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="mt-4 flex justify-end px-6 py-3 text-lg font-semibold">
-            Total: $200
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
+
+          {/* Bottom Price & controls */}
+          <div className="mt-6 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total: ${totalPrice.toFixed(2)}
+            </h2>
+
+            <button
+              onClick={clearCart}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-white shadow hover:bg-blue-700"
+            >
+              Clear Cart
+            </button>
+          </div>
+        </>
       )}
-    </>
+    </div>
   );
 };
 
