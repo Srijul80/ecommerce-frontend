@@ -71,7 +71,7 @@ const Footer = () => {
         <div>
           <h3 className="mb-3 font-semibold text-white">Get in Touch</h3>
           <p className="text-gray-400">support@eshop.com</p>
-          <p className="text-gray-400">+1 (555) 123-4567</p>
+          <p className="text-gray-400">9999999999</p>
           <div className="mt-4 flex space-x-4">
             <a href="#" className="hover:text-white">
               🌐
