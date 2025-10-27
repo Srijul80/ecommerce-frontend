@@ -5,8 +5,8 @@ import { useNavigate } from "react-router";
 import { CartContext } from "../../../Context/Cart/CartContext";
 
 const NavButtons = () => {
+  const { cartLength } = useContext(CartContext);
   const navigate = useNavigate();
-  const { cartItems } = useContext(CartContext);
 
   return (
     <div className="flex items-center gap-6">
@@ -15,7 +15,7 @@ const NavButtons = () => {
         <FiShoppingCart size={22} onClick={() => navigate("/cart")} />
         {/* Badge */}
         <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
-          {cartItems.length}
+          {cartLength}
         </span>
       </button>
 

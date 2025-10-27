@@ -80,7 +80,11 @@ const ProductDetails = () => {
               </button>
             </div>
 
-            <AddToCartBtn product={singleProduct} quantity={quantity} />
+            <AddToCartBtn
+              product={singleProduct}
+              quantity={quantity}
+              setQuantity={setQuantity}
+            />
           </div>
 
           {/* Extra Info */}

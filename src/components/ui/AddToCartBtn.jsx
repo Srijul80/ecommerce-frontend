@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { CartContext } from "../../Context/Cart/CartContext";
 
-const AddToCartBtn = ({ product, quantity }) => {
-  const { cartItems, setCartItems, setQuantity } = useContext(CartContext);
+const AddToCartBtn = ({ product, quantity, setQuantity }) => {
+  const { cartItems, setCartItems } = useContext(CartContext);
   const handleAddToCart = () => {
     const newItem = { product, quantity };
 
@@ -17,8 +17,12 @@ const AddToCartBtn = ({ product, quantity }) => {
       return;
     }
 
-    setCartItems((prev) => [...prev, newItem]);
+    const updateCart = [...cartItems, newItem];
+    setCartItems(updateCart);
+    console.log("Saving to localStorage:", updateCart);
+    localStorage.setItem("cart", JSON.stringify(updateCart));
     setQuantity(1);
+
     alert("added to cart");
   };
 
