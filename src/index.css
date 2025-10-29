@@ -23,3 +23,7 @@ body {
     @apply underline underline-offset-2;
   }
 }
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
