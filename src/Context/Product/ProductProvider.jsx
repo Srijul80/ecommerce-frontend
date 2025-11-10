@@ -7,11 +7,14 @@ export const ProductProvider = ({ children }) => {
   const [categories, setCategory] = useState([]);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [priceRange, setPriceRange] = useState(1000);
   const [search, setSearch] = useState("");
 
   const fetchProducts = async () => {
+    // const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = "https://dummyjson.com/products?limit=0";
     try {
-      const response = await fetch("https://dummyjson.com/products?limit=0");
+      const response = await fetch(apiUrl);
       const data = await response.json();
       console.log(data.products, "Data Fetched Successfully");
       setAllProducts(data.products);
@@ -46,7 +49,16 @@ export const ProductProvider = ({ children }) => {
 
   return (
     <ProductContext.Provider
-      value={{ allProducts, loading, categories, brands, search, setSearch }}
+      value={{
+        allProducts,
+        loading,
+        categories,
+        brands,
+        search,
+        setSearch,
+        setPriceRange,
+        priceRange,
+      }}
     >
       {children}
     </ProductContext.Provider>

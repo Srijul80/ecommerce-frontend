@@ -20,7 +20,7 @@ const Contact = () => {
         {/* Contact Form */}
         <div className="rounded-lg bg-white p-8 shadow-md">
           <h2 className="mb-6 text-2xl font-bold text-gray-800">
-            Send us a message 💬
+            Send us a message
           </h2>
           <form className="space-y-5">
             <div>

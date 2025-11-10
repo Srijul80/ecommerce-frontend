@@ -92,6 +92,7 @@ const Footer = () => {
       {/* Bottom Section */}
       <div className="border-t border-gray-700 py-4 text-center text-sm">
         © {new Date().getFullYear()} Demo E-Commerce. All rights reserved.
+        Created by Rijul Sharma.
       </div>
     </footer>
   );
